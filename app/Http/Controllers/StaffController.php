@@ -1,0 +1,139 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Sekolah;
+use App\Models\Staff;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
+class StaffController extends Controller
+{
+    public function index()
+    {
+        $staffs = Staff::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
+
+        return view('staff.index', compact('staffs'));
+    }
+
+    public function create()
+    {
+        $staff = new Staff();
+
+        return view('staff.create', compact('staff',));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required',
+            'username' => 'required|unique:users',
+            'email' => 'required|unique:users',
+            'jabatan' => 'required',
+            'tanggal_lahir' => 'required',
+        ], [
+            'username.required' => 'The nip field is required.',
+            'username.unique' => 'The nip has already been taken.',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $user = User::create([
+                'username' => $request->username,
+                'name' => $request->nama,
+                'email' => $request->email,
+                'password' => Hash::make(Carbon::parse($request->tanggal_lahir)->format('dmY')),
+            ]);
+
+            $user->staff()->create([
+                'sekolah_id' => auth()->user()->staff->sekolah_id,
+                'jabatan' => $request->jabatan,
+                'tanggal_lahir' => $request->tanggal_lahir,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('staff.index')->with('success', 'Staff berhasil ditambahkan');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function show(Staff $staff)
+    {
+        //
+    }
+
+    public function edit(Staff $staff)
+    {
+        return view('staff.edit', compact('staff'));
+    }
+
+    public function update(Request $request, Staff $staff)
+    {
+        $request->validate([
+            'nama' => 'required',
+            'username' => 'required|unique:users,username,' . $staff->user->id,
+            'email' => 'required|unique:users,email,' . $staff->user->id,
+            'jabatan' => 'required',
+            'tanggal_lahir' => 'required',
+        ], [
+            'username.required' => 'The nip field is required.',
+            'username.unique' => 'The nip has already been taken.',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $staff->user()->update([
+                'username' => $request->username,
+                'name' => $request->nama,
+                'email' => $request->email,
+                'password' => Hash::make(Carbon::parse($request->tanggal_lahir)->format('dmY')),
+            ]);
+
+            $staff->update([
+                'sekolah_id' => auth()->user()->staff->sekolah_id,
+                'jabatan' => $request->jabatan,
+                'tanggal_lahir' => $request->tanggal_lahir,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('staff.index')->with('success', 'Staff berhasil diupdate');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function destroy(Staff $staff)
+    {
+        try {
+            DB::beginTransaction();
+
+            $staff->user()->update(['is_active' => 0]);
+
+            DB::commit();
+            return back()->with('success', 'Staff berhasil dinonaktifkan');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function activate(Request $request, Staff $staff)
+    {
+        try {
+            DB::beginTransaction();
+            $staff->user()->update(['is_active' => 1]);
+            DB::commit();
+
+            return back()->with('success', 'Staff berhasil diaktifkan');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+}
