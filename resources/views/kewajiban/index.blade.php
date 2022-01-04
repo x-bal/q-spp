@@ -1,12 +1,12 @@
-@extends('layouts.master', ['title' => 'Data Jurusan'])
+@extends('layouts.master', ['title' => 'Data Kewajiban'])
 
 @section('content')
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h4 class="card-title">Data Jurusan</h4>
-                <a href="{{ route('jurusan.create') }}" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add Jurusan</a>
+                <h4 class="card-title">Data Kewajiban</h4>
+                <a href="{{ route('kewajiban.create') }}" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add Kewajiban</a>
             </div>
 
             <div class="card-body">
@@ -36,18 +36,22 @@
                             <tr>
                                 <th class="width80">#</th>
                                 <th>Nama</th>
+                                <th>Biaya</th>
+                                <th>Tahun Ajaran</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($jurusan as $jur)
+                            @foreach($kewajiban as $wajib)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $jur->nama }}</td>
+                                <td>{{ $wajib->nama }}</td>
+                                <td>{{ $wajib->biaya }}</td>
+                                <td>{{ $wajib->tahunAjaran->tahun_ajaran }}</td>
                                 <td>
                                     <div class="d-flex">
-                                        <a href="{{ route('jurusan.edit', $jur->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
-                                        <form action="{{ route('jurusan.destroy', $jur->id) }}" method="post" class="form-delete">
+                                        <a href="{{ route('kewajiban.edit', $wajib->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
+                                        <form action="{{ route('kewajiban.destroy', $wajib->id) }}" method="post" class="form-delete">
                                             @method('DELETE')
                                             @csrf
                                             <button type="submit" class="btn btn-danger shadow btn-xs sharp btn-delete"><i class="fa fa-trash"></i></button>

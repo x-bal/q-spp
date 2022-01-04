@@ -24,4 +24,19 @@ class Kelas extends Model
     {
         return $this->belongsTo(Ruang::class, 'ruang_id');
     }
+
+    public function tahunAjaran()
+    {
+        return $this->belongsTo(TahunAjaran::class, 'tahun_ajaran_id');
+    }
+
+    public function siswa()
+    {
+        return $this->hasMany(Siswa::class);
+    }
+
+    public function kewajiban()
+    {
+        return $this->belongsToMany(Kewajiban::class);
+    }
 }

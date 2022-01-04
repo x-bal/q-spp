@@ -17,7 +17,6 @@
                                 <th class="width80"><strong>#</strong></th>
                                 <th><strong>Nama</strong></th>
                                 <th><strong>Action</strong></th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>

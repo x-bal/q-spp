@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ruang;
+use App\Models\Sekolah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -10,9 +11,21 @@ class RuangController extends Controller
 {
     public function index()
     {
-        $ruangs = Ruang::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
+        $ruangs = [];
+        $sekolah = [];
 
-        return view('ruang.index', compact('ruangs'));
+        if (auth()->user()->hasRole('Admin Yayasan')) {
+            $sekolah = Sekolah::where('yayasan_id', auth()->user()->yayasan->id)->get();
+            if (request('sekolah')) {
+                $ruangs = Ruang::where('sekolah_id', request('sekolah'))->get();
+            }
+        }
+
+        if (auth()->user()->hasRole('Admin Sekolah')) {
+            $ruangs = Ruang::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
+        }
+
+        return view('ruang.index', compact('ruangs', 'sekolah'));
     }
 
     public function create()
@@ -70,7 +83,7 @@ class RuangController extends Controller
             DB::beginTransaction();
 
             $ruang->update([
-                'sekolah_id' => auth()->user()->staff->sekolah_id,
+                // 'sekolah_id' => auth()->user()->staff->sekolah_id,
                 'nama' => $request->nama,
                 'lantai' => $request->lantai,
                 'gedung' => $request->gedung,

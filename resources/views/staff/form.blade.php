@@ -54,16 +54,24 @@
         </div>
     </div>
 
-    <!-- <div class="col-md-6">
+    @role('Admin Yayasan')
+    <div class="col-md-6">
         <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" class="form-control" value="{{ $staff->password ?? old('password') }}">
+            <label for="sekolah">Sekolah</label>
+            <select name="sekolah" id="sekolah" class="form-control">
+                <option disabled selected>-- Pilih Sekolah --</option>
+                @foreach($sekolah as $skl)
+                <option {{ $skl->id == $staff->sekolah_id ? 'selected' : '' }} value="{{ $skl->id }}">{{ $skl->nama }}</option>
+                @endforeach
+            </select>
 
-            @error('password')
+            @error('sekolah')
             <small class="text-danger">{{ $message }}</small>
             @enderror
         </div>
-    </div> -->
+    </div>
+    @endrole
+
 </div>
 
 <div class="row">

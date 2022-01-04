@@ -10,8 +10,28 @@
             </div>
 
             <div class="card-body">
+                @role('Admin Yayasan')
+                <form action="" method="get">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <select name="sekolah" id="sekolah" class="form-control">
+                                    <option disabled selected>-- Pilih Sekolah --</option>
+                                    @foreach($sekolah as $skl)
+                                    <option value="{{ $skl->id }}" {{ request('sekolah') == $skl->id ? 'selected' : '' }}>{{ $skl->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+                @endrole
+
                 <div class="table-responsive">
-                    <table class="table table-responsive-md">
+                    <table class="table table-responsive-md" id="example">
                         <thead>
                             <tr>
                                 <th class="width80"><strong>#</strong></th>
@@ -19,7 +39,6 @@
                                 <th><strong>Lantai</strong></th>
                                 <th><strong>Gedung</strong></th>
                                 <th><strong>Action</strong></th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,5 +70,8 @@
 @stop
 
 @push('script')
-
+<!-- <script src="{{ asset('assets') }}/js/plugins-init/datatables.init.js"></script> -->
+<script>
+    $('#example').DataTable();
+</script>
 @endpush

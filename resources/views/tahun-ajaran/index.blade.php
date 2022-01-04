@@ -1,12 +1,12 @@
-@extends('layouts.master', ['title' => 'Data Jurusan'])
+@extends('layouts.master', ['title' => 'Data Tahun Ajaran'])
 
 @section('content')
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h4 class="card-title">Data Jurusan</h4>
-                <a href="{{ route('jurusan.create') }}" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add Jurusan</a>
+                <h4 class="card-title">Data Tahun Ajaran</h4>
+                <a href="{{ route('tahun-ajaran.create') }}" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add tahun</a>
             </div>
 
             <div class="card-body">
@@ -35,19 +35,20 @@
                         <thead>
                             <tr>
                                 <th class="width80">#</th>
-                                <th>Nama</th>
+                                <th>Tahun Ajaran</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($jurusan as $jur)
+                            @foreach($tahun as $thn)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $jur->nama }}</td>
+                                <td>{{ $thn->tahun_ajaran }}</td>
                                 <td>
                                     <div class="d-flex">
-                                        <a href="{{ route('jurusan.edit', $jur->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
-                                        <form action="{{ route('jurusan.destroy', $jur->id) }}" method="post" class="form-delete">
+                                        <a href="{{ route('tahun-ajaran.show', $thn->id) }}" class="btn btn-info shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+                                        <a href="{{ route('tahun-ajaran.edit', $thn->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
+                                        <form action="{{ route('tahun-ajaran.destroy', $thn->id) }}" method="post" class="form-delete">
                                             @method('DELETE')
                                             @csrf
                                             <button type="submit" class="btn btn-danger shadow btn-xs sharp btn-delete"><i class="fa fa-trash"></i></button>

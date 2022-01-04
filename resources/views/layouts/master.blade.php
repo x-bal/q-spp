@@ -22,6 +22,7 @@
     <link href="{{ asset('assets') }}/vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="{{ asset('assets') }}/vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
     <link href="{{ asset('assets') }}/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets') }}/vendor/select2/css/select2.min.css">
 </head>
 
 <body>
@@ -109,7 +110,7 @@
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="javascript:void(0)" role="button" data-toggle="dropdown">
                                     <div class="header-info">
-                                        <span class="text-black">Hello,<strong>{{ auth()->user()->name }}</strong></span>
+                                        <span class="text-black">Hello, <strong>{{ auth()->user()->name }}</strong></span>
                                         <p class="fs-12 mb-0">{{ auth()->user()->roles()->first()->name }}</p>
                                     </div>
                                     <img src="{{ asset('assets') }}/images/profile/17.jpg" width="20" alt="" />
@@ -177,13 +178,29 @@
                             <span class="nav-text">Data Master</span>
                         </a>
                         <ul aria-expanded="false">
-                            @role('yayasan')
+                            @role('Admin Yayasan')
                             <li><a href="{{ route('sekolah.index') }}">Data Sekolah</a></li>
                             @endrole
                             <li><a href="{{ route('jurusan.index') }}">Data Jurusan</a></li>
                             <li><a href="{{ route('staff.index') }}">Data Staff</a></li>
                             <li><a href="{{ route('ruang.index') }}">Data Ruangan</a></li>
                             <li><a href="{{ route('kelas.index') }}">Data Kelas</a></li>
+                            <li><a href="{{ route('siswa.index') }}">Data Siswa</a></li>
+                            <li><a href="{{ route('tahun-ajaran.index') }}">Data Tahun Ajaran</a></li>
+                            <li><a href="{{ route('kewajiban.index') }}">Data Kewajiban</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="fa fa-credit-card"></i>
+                            <span class="nav-text">Keuangan</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="/dashboard">Dashboard</a></li>
+                            <li><a href="my-wallet.html">My Wallet</a></li>
+                            <li><a href="invoices.html">Invoices</a></li>
+                            <li><a href="cards-center.html">Cards Center</a></li>
+                            <li><a href="transactions.html">Transactions</a></li>
+                            <li><a href="transactions-details.html">Transactions Details</a></li>
                         </ul>
                     </li>
                     @role('administrator')
@@ -275,6 +292,9 @@
 
     <script src="{{ asset('assets') }}/vendor/select2/js/select2.full.min.js"></script>
     <script src="{{ asset('assets') }}/js/plugins-init/select2-init.js"></script>
+
+    @stack('script')
+
     <script>
         function carouselReview() {
             /*  testimonial one function by = owl.carousel.js */
@@ -362,9 +382,9 @@
                 }
             })
         })
-    </script>
 
-    @yield('script')
+        // $('#table').DataTable();
+    </script>
 </body>
 
 </html>

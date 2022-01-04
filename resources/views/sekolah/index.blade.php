@@ -11,7 +11,7 @@
 
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-responsive-md">
+                    <table class="table table-responsive-md" id="example">
                         <thead>
                             <tr>
                                 <th class="width80"><strong>#</strong></th>
@@ -19,7 +19,6 @@
                                 <th><strong>Telp</strong></th>
                                 <th><strong>Alamat</strong></th>
                                 <th><strong>Action</strong></th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,5 +50,8 @@
 @stop
 
 @push('script')
-
+<!-- <script src="{{ asset('assets') }}/js/plugins-init/datatables.init.js"></script> -->
+<script>
+    $('#example').DataTable();
+</script>
 @endpush

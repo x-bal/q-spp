@@ -10,16 +10,36 @@
             </div>
 
             <div class="card-body">
+                @role('Admin Yayasan')
+                <form action="" method="get">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <select name="sekolah" id="sekolah" class="form-control">
+                                    <option disabled selected>-- Pilih Sekolah --</option>
+                                    @foreach($sekolah as $skl)
+                                    <option value="{{ $skl->id }}" {{ request('sekolah') == $skl->id ? 'selected' : '' }}>{{ $skl->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+                @endrole
+
                 <div class="table-responsive">
-                    <table class="table table-responsive-md">
+                    <table class="table table-responsive-md" id="example">
                         <thead>
                             <tr>
                                 <th class="width80"><strong>#</strong></th>
                                 <th><strong>Nama</strong></th>
                                 <th><strong>Jurusan</strong></th>
                                 <th><strong>Ruangan</strong></th>
+                                <th><strong>Tahun Ajaran</strong></th>
                                 <th><strong>Action</strong></th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -29,6 +49,7 @@
                                 <td>{{ $kls->nama }}</td>
                                 <td>{{ $kls->jurusan->nama }}</td>
                                 <td>{{ $kls->ruangan->nama }}</td>
+                                <td>{{ $kls->tahunAjaran->tahun_ajaran }}</td>
                                 <td>
                                     <div class="d-flex">
                                         <a href="{{ route('kelas.edit', $kls->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
@@ -51,5 +72,8 @@
 @stop
 
 @push('script')
-
+<!-- <script src="{{ asset('assets') }}/js/plugins-init/datatables.init.js"></script> -->
+<script>
+    $('#example').DataTable();
+</script>
 @endpush

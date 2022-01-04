@@ -3,11 +3,14 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KelasController;
+use App\Http\Controllers\KewajibanController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RuangController;
 use App\Http\Controllers\SekolahController;
+use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\TahunAjaranController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,4 +49,9 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::post('/staff/{staff:id}/activate', [StaffController::class, 'activate'])->name('staff.activate');
     Route::resource('ruang', RuangController::class);
     Route::resource('kelas', KelasController::class);
+    Route::get('kelas/{kela:id}/kewajiban', [KelasController::class, 'kewajiban'])->name('kelas.kewajiban');
+    Route::post('kelas/{kela:id}/kewajiban', [KelasController::class, 'storeKewajiban'])->name('kelas.storeKewajiban');
+    Route::resource('siswa', SiswaController::class);
+    Route::resource('tahun-ajaran', TahunAjaranController::class);
+    Route::resource('kewajiban', KewajibanController::class);
 });

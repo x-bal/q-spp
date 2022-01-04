@@ -14,30 +14,63 @@ class StaffController extends Controller
 {
     public function index()
     {
-        $staffs = Staff::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
+        $staffs = [];
+        $sekolah = [];
 
-        return view('staff.index', compact('staffs'));
+        if (auth()->user()->hasRole('Admin Yayasan')) {
+            $sekolah = Sekolah::where('yayasan_id', auth()->user()->yayasan->id)->get();
+            if (request('sekolah')) {
+                $staffs = Staff::where('sekolah_id', request('sekolah'))->get();
+            }
+        }
+
+        if (auth()->user()->hasRole('Admin Sekolah')) {
+            $staffs = Staff::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
+        }
+
+        return view('staff.index', compact('staffs', 'sekolah'));
     }
 
     public function create()
     {
         $staff = new Staff();
+        $sekolah = [];
 
-        return view('staff.create', compact('staff',));
+        if (auth()->user()->hasRole('Admin Yayasan')) {
+            $sekolah = Sekolah::where('yayasan_id', auth()->user()->yayasan->id)->get();
+        }
+
+        return view('staff.create', compact('staff', 'sekolah'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required',
-            'username' => 'required|unique:users',
-            'email' => 'required|unique:users',
-            'jabatan' => 'required',
-            'tanggal_lahir' => 'required',
-        ], [
-            'username.required' => 'The nip field is required.',
-            'username.unique' => 'The nip has already been taken.',
-        ]);
+        if (auth()->user()->hasRole('Admin Yayasan')) {
+            $request->validate([
+                'nama' => 'required',
+                'username' => 'required|unique:users',
+                'email' => 'required|unique:users',
+                'jabatan' => 'required',
+                'tanggal_lahir' => 'required',
+                'sekolah' => 'required',
+            ], [
+                'username.required' => 'The nip field is required.',
+                'username.unique' => 'The nip has already been taken.',
+            ]);
+        }
+
+        if (auth()->user()->hasRole('Admin Sekolah')) {
+            $request->validate([
+                'nama' => 'required',
+                'username' => 'required|unique:users',
+                'email' => 'required|unique:users',
+                'jabatan' => 'required',
+                'tanggal_lahir' => 'required',
+            ], [
+                'username.required' => 'The nip field is required.',
+                'username.unique' => 'The nip has already been taken.',
+            ]);
+        }
 
         try {
             DB::beginTransaction();
@@ -50,7 +83,7 @@ class StaffController extends Controller
             ]);
 
             $user->staff()->create([
-                'sekolah_id' => auth()->user()->staff->sekolah_id,
+                'sekolah_id' => auth()->user()->hasRole('Admin Yayasan') ? $request->sekolah : auth()->user()->staff->sekolah_id,
                 'jabatan' => $request->jabatan,
                 'tanggal_lahir' => $request->tanggal_lahir,
             ]);
@@ -70,21 +103,43 @@ class StaffController extends Controller
 
     public function edit(Staff $staff)
     {
-        return view('staff.edit', compact('staff'));
+        $sekolah = [];
+
+        if (auth()->user()->hasRole('Admin Yayasan')) {
+            $sekolah = Sekolah::where('yayasan_id', auth()->user()->yayasan->id)->get();
+        }
+
+        return view('staff.edit', compact('staff', 'sekolah'));
     }
 
     public function update(Request $request, Staff $staff)
     {
-        $request->validate([
-            'nama' => 'required',
-            'username' => 'required|unique:users,username,' . $staff->user->id,
-            'email' => 'required|unique:users,email,' . $staff->user->id,
-            'jabatan' => 'required',
-            'tanggal_lahir' => 'required',
-        ], [
-            'username.required' => 'The nip field is required.',
-            'username.unique' => 'The nip has already been taken.',
-        ]);
+        if (auth()->user()->hasRole('Admin Yayasan')) {
+            $request->validate([
+                'nama' => 'required',
+                'username' => 'required|unique:users,username,' . $staff->user->id,
+                'email' => 'required|unique:users,email,' . $staff->user->id,
+                'jabatan' => 'required',
+                'tanggal_lahir' => 'required',
+                'sekolah' => 'required',
+            ], [
+                'username.required' => 'The nip field is required.',
+                'username.unique' => 'The nip has already been taken.',
+            ]);
+        }
+
+        if (auth()->user()->hasRole('Admin Sekolah')) {
+            $request->validate([
+                'nama' => 'required',
+                'username' => 'required|unique:users,username,' . $staff->user->id,
+                'email' => 'required|unique:users,email,' . $staff->user->id,
+                'jabatan' => 'required',
+                'tanggal_lahir' => 'required',
+            ], [
+                'username.required' => 'The nip field is required.',
+                'username.unique' => 'The nip has already been taken.',
+            ]);
+        }
 
         try {
             DB::beginTransaction();
@@ -97,7 +152,7 @@ class StaffController extends Controller
             ]);
 
             $staff->update([
-                'sekolah_id' => auth()->user()->staff->sekolah_id,
+                'sekolah_id' => auth()->user()->hasRole('Admin Yayasan') ? $request->sekolah : auth()->user()->staff->sekolah_id,
                 'jabatan' => $request->jabatan,
                 'tanggal_lahir' => $request->tanggal_lahir,
             ]);
