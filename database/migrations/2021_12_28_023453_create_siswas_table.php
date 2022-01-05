@@ -17,8 +17,10 @@ class CreateSiswasTable extends Migration
             $table->id();
             $table->foreignId('sekolah_id');
             $table->foreignId('kelas_id');
+            $table->foreignId('user_id');
             $table->string('nisn', 20)->unique();
             $table->string('nama');
+            $table->enum('jk', ['L', 'P']);
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');
             $table->timestamps();

@@ -19,6 +19,7 @@ class CreateKewajibansTable extends Migration
             $table->foreignId('sekolah_id');
             $table->string('nama');
             $table->double('biaya', 20);
+            $table->date('jatuh_tempo');
             $table->timestamps();
         });
     }

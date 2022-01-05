@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="form-group">
             <label for="nama">Nama</label>
             <input type="text" name="nama" id="nama" class="form-control" value="{{ $siswa->nama ?? old('nama') }}">
@@ -10,12 +10,27 @@
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="form-group">
             <label for="nisn">Nisn</label>
             <input type="number" name="nisn" id="nisn" class="form-control" value="{{ $siswa->nisn ?? old('nisn') }}">
 
             @error('nisn')
+            <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="jenis_kelamin">Jenis Kelamin</label>
+            <select name="jenis_kelamin" id="jenis_kelamin" class="form-control">
+                <option disabled selected>-- Jenis Kelamin --</option>
+                <option {{ $siswa->jk == 'L' ? 'selected' : '' }} value="L">L</option>
+                <option {{ $siswa->jk == 'P' ? 'selected' : '' }} value="P">P</option>
+            </select>
+
+            @error('jenis_kelamin')
             <small class="text-danger">{{ $message }}</small>
             @enderror
         </div>

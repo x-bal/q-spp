@@ -122,6 +122,9 @@ class KelasController extends Controller
         try {
             DB::beginTransaction();
             $kela->kewajiban()->sync($request->kewajiban);
+            foreach ($kela->siswa as $siswa) {
+                $siswa->kewajiban()->sync($request->kewajiban);
+            }
             DB::commit();
 
             return redirect()->route('tahun-ajaran.show', $kela->tahun_ajaran_id)->with('success', 'Kewajiban Kelas berhasil ditambahkan');

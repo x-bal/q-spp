@@ -38,6 +38,7 @@
                                 <th>Nama</th>
                                 <th>Biaya</th>
                                 <th>Tahun Ajaran</th>
+                                <th>Jatuh Tempo</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -48,6 +49,7 @@
                                 <td>{{ $wajib->nama }}</td>
                                 <td>{{ $wajib->biaya }}</td>
                                 <td>{{ $wajib->tahunAjaran->tahun_ajaran }}</td>
+                                <td>{{ Carbon\Carbon::parse($wajib->jatuh_tempo)->format('d/m/Y') }}</td>
                                 <td>
                                     <div class="d-flex">
                                         <a href="{{ route('kewajiban.edit', $wajib->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>

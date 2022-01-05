@@ -13,9 +13,9 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="permission">Permission</label>
-            <select class="form-control" name="permission[]" multiple="multiple">
+            <select class="multi-select" name="permission[]" multiple="multiple">
                 @foreach($permissions as $permission)
-                <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+                <option @if(in_array($permission->id, $role->permissions()->pluck('permission_id')->toArray())) selected @endif value="{{ $permission->id }}">{{ $permission->name }}</option>
                 @endforeach
             </select>
 

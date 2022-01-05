@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\SiswaImport;
 use App\Models\Kelas;
 use App\Models\Sekolah;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SiswaController extends Controller
 {
@@ -42,6 +45,7 @@ class SiswaController extends Controller
         $request->validate([
             'nama' => 'required',
             'nisn' => 'required',
+            'jenis_kelamin' => 'required',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
             'kelas' => 'required',
@@ -51,6 +55,7 @@ class SiswaController extends Controller
             DB::beginTransaction();
             Siswa::create([
                 'nama' => $request->nama,
+                'jk' => $request->jenis_kelamin,
                 'nisn' => $request->nisn,
                 'tempat_lahir' => $request->tempat_lahir,
                 'tanggal_lahir' => $request->tanggal_lahir,
@@ -81,6 +86,7 @@ class SiswaController extends Controller
     {
         $request->validate([
             'nama' => 'required',
+            'jenis_kelamin' => 'required',
             'nisn' => 'required',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
@@ -91,6 +97,7 @@ class SiswaController extends Controller
             DB::beginTransaction();
             $siswa->update([
                 'nama' => $request->nama,
+                'jk' => $request->jenis_kelamin,
                 'nisn' => $request->nisn,
                 'tempat_lahir' => $request->tempat_lahir,
                 'tanggal_lahir' => $request->tanggal_lahir,
@@ -100,6 +107,22 @@ class SiswaController extends Controller
             DB::commit();
 
             return redirect()->route('siswa.index')->with('success', 'Siswa berhasil diupdate');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function import(Request $request)
+    {
+        try {
+            $file = $request->file('file');
+            $fileUrl =  $file->storeAs('siswa/import', $file->getClientOriginalName());
+
+            Excel::import(new SiswaImport(auth()->user()->staff->sekolah_id, $request->kelas), public_path('storage/' . $fileUrl));
+
+            Storage::delete($fileUrl);
+
+            return back()->with('success', 'Data siswa berhasil diimport');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

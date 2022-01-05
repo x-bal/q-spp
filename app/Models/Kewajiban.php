@@ -19,4 +19,9 @@ class Kewajiban extends Model
     {
         return $this->hasMany(Kelas::class);
     }
+
+    public function siswa()
+    {
+        return $this->hasMany(Siswa::class);
+    }
 }

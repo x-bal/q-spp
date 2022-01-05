@@ -49,31 +49,36 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
-        $permissions = Permission::get();
+        $permissions = Permission::orderBy('name')->get();
 
         return view('role.edit', compact('role', 'permissions'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  Role $role
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Role $role)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'permission' => 'required'
+        ]);
+
+        try {
+            $role->update(['name' => $request->name]);
+            $role->syncPermissions($request->permission);
+
+            return redirect()->route('role.index')->with('success', 'Role berhasil diupdate');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  Role $role
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Role $role)
     {
-        //
+        try {
+            $role->delete();
+
+            return redirect()->route('role.index')->with('success', 'Role berhasil didelete');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
     }
 }

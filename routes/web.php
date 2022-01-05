@@ -37,7 +37,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Route Administrator
-    Route::middleware('role:administrator')->group(function () {
+    Route::middleware('role:Administrator')->group(function () {
         Route::resource('role', RoleController::class);
         Route::resource('permission', PermissionController::class);
     });
@@ -52,6 +52,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('kelas/{kela:id}/kewajiban', [KelasController::class, 'kewajiban'])->name('kelas.kewajiban');
     Route::post('kelas/{kela:id}/kewajiban', [KelasController::class, 'storeKewajiban'])->name('kelas.storeKewajiban');
     Route::resource('siswa', SiswaController::class);
+    Route::post('siswa/import', [SiswaController::class, 'import'])->name('siswa.import');
     Route::resource('tahun-ajaran', TahunAjaranController::class);
     Route::resource('kewajiban', KewajibanController::class);
 });

@@ -53,6 +53,7 @@ class KewajibanController extends Controller
             'nama' => 'required',
             'biaya' => 'required',
             'tahun' => 'required',
+            'jatuh_tempo' => 'required',
         ]);
 
         try {
@@ -60,6 +61,7 @@ class KewajibanController extends Controller
             Kewajiban::create([
                 'nama' => $request->nama,
                 'biaya' => $request->biaya,
+                'jatuh_tempo' => $request->jatuh_tempo,
                 'tahun_ajaran_id' => $request->tahun,
                 'sekolah_id' => $this->getSekolah()
             ]);
@@ -89,6 +91,7 @@ class KewajibanController extends Controller
             'nama' => 'required',
             'biaya' => 'required',
             'tahun' => 'required',
+            'jatuh_tempo' => 'required',
         ]);
 
         try {
@@ -96,6 +99,7 @@ class KewajibanController extends Controller
             $kewajiban->update([
                 'nama' => $request->nama,
                 'biaya' => $request->biaya,
+                'jatuh_tempo' => $request->jatuh_tempo,
                 'tahun_ajaran_id' => $request->tahun,
                 // 'sekolah_id' => $this->getSekolah()
             ]);

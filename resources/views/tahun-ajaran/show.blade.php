@@ -37,7 +37,7 @@
                                 <th class="width80">#</th>
                                 <th>Kelas</th>
                                 <th>Jurusan</th>
-                                <th>Jumlah Siswa</th>
+                                <th>Jumlah</th>
                                 <th>Kewajiban</th>
                                 <th>Action</th>
                             </tr>
@@ -48,11 +48,13 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $kelas->nama }}</td>
                                 <td>{{ $kelas->jurusan->nama }}</td>
-                                <td>{{ $kelas->siswa()->count() }}</td>
+                                <td>{{ $kelas->siswa()->count() > 0 ? $kelas->siswa()->count() . ' Siswa' : 'Harap import data siswa' }}</td>
                                 <td>
-                                    @foreach($kelas->kewajiban as $kewajiban)
-                                    {{ $kewajiban->nama }},
-                                    @endforeach
+                                    <ul>
+                                        @foreach($kelas->kewajiban as $kewajiban)
+                                        <li>{{ $kewajiban->nama }}</li>
+                                        @endforeach
+                                    </ul>
                                 </td>
                                 <td>
                                     <div class="d-flex">
@@ -84,7 +86,8 @@
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
                 </button>
             </div>
-            <form action="" method="post">
+            <form action="{{ route('siswa.import') }}" method="post" enctype="multipart/form-data">
+                @csrf
                 <div class="modal-body">
                     <input type="hidden" name="kelas" id="kelas">
                     <div class="form-group">

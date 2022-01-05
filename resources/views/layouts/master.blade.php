@@ -203,7 +203,7 @@
                             <li><a href="transactions-details.html">Transactions Details</a></li>
                         </ul>
                     </li>
-                    @role('administrator')
+                    @role('Administrator')
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                             <i class="fa fa-cogs"></i>
                             <span class="nav-text">Data Access</span>

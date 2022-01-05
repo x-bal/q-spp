@@ -36,6 +36,7 @@
                                 <th class="width80">#</th>
                                 <th>Nisn</th>
                                 <th>Nama</th>
+                                <th>JK</th>
                                 <th>Tempat, Tanggal Lahir</th>
                                 <th>Kelas</th>
                                 <th>Action</th>
@@ -47,6 +48,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $sis->nisn }}</td>
                                 <td>{{ $sis->nama }}</td>
+                                <td>{{ $sis->jk }}</td>
                                 <td>{{ $sis->tempat_lahir . ', ' . Carbon\Carbon::parse($sis->tanggal_lahir)->format('d/m/Y') }}</td>
                                 <td>{{ $sis->kelas->nama }}</td>
                                 <td>

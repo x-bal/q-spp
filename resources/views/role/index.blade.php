@@ -26,7 +26,7 @@
                                 <td>{{ $role->name }}</td>
                                 <td>
                                     <div class="d-flex">
-                                        <a href="{{ route('role.edit', $role->id) }}" class="btn btn-success shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
+                                        <a href="{{ route('role.edit', $role->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
                                         <form action="{{ route('role.destroy', $role->id) }}" method="post" class="form-delete">
                                             @method('DELETE')
                                             @csrf

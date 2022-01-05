@@ -2,7 +2,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" name="name" id="name" class="form-control" value="{{ $permission->name ?? old('name') }}">
+            <input type="text" name="name" id="name" class="form-control" value="{{ $permission->name ?? old('name') }}" autofocus>
 
             @error('name')
             <small class="text-danger">{{ $message }}</small>

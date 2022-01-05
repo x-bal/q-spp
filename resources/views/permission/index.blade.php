@@ -45,7 +45,7 @@
 </div>
 @stop
 
-@section('script')
+@push('script')
 <script>
     $("#example").DataTable()
 </script>
@@ -71,4 +71,4 @@
         ]
     })
 </script> -->
-@stop
+@endpush

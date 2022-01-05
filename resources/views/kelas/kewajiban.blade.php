@@ -16,7 +16,7 @@
                         <label for="kewajiban">Kewajiban</label>
                         <select class="multi-select" name="kewajiban[]" multiple="multiple">
                             @foreach($kewajiban as $wajib)
-                            <option value="{{ $wajib->id }}">{{ $wajib->nama }} - {{ $wajib->biaya }}</option>
+                            <option @if(in_array($wajib->id, $kela->kewajiban()->pluck('kewajiban_id')->toArray())) selected @endif value="{{ $wajib->id }}">{{ $wajib->nama }} - {{ $wajib->biaya }}</option>
                             @endforeach
                         </select>
                     </div>
