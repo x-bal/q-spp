@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                         </div>
                     </div>
                 </form>

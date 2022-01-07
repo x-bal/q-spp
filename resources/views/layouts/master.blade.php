@@ -181,16 +181,17 @@
                             @role('Administrator')
                             <li><a href="{{ route('yayasan.index') }}">Data Yayasan</a></li>
                             @endrole
-
-                            @role('Admin Sekolah')
+                            @role('Admin Yayasan')
                             <li><a href="{{ route('sekolah.index') }}">Data Sekolah</a></li>
+                            @endrole
+                            @role('Admin Sekolah')
                             <li><a href="{{ route('jurusan.index') }}">Data Jurusan</a></li>
                             <li><a href="{{ route('staff.index') }}">Data Staff</a></li>
+                            <li><a href="{{ route('tahun-ajaran.index') }}">Data Tahun Ajaran</a></li>
+                            <li><a href="{{ route('kewajiban.index') }}">Data Kewajiban</a></li>
                             <li><a href="{{ route('ruang.index') }}">Data Ruangan</a></li>
                             <li><a href="{{ route('kelas.index') }}">Data Kelas</a></li>
                             <li><a href="{{ route('siswa.index') }}">Data Siswa</a></li>
-                            <li><a href="{{ route('tahun-ajaran.index') }}">Data Tahun Ajaran</a></li>
-                            <li><a href="{{ route('kewajiban.index') }}">Data Kewajiban</a></li>
                             @endrole
 
                             @role('Administrator')
@@ -198,11 +199,11 @@
                             <li><a href="{{ route('sekolah.index') }}">Data Sekolah</a></li>
                             <li><a href="{{ route('jurusan.index') }}">Data Jurusan</a></li>
                             <li><a href="{{ route('staff.index') }}">Data Staff</a></li>
+                            <li><a href="{{ route('tahun-ajaran.index') }}">Data Tahun Ajaran</a></li>
+                            <li><a href="{{ route('kewajiban.index') }}">Data Kewajiban</a></li>
                             <li><a href="{{ route('ruang.index') }}">Data Ruangan</a></li>
                             <li><a href="{{ route('kelas.index') }}">Data Kelas</a></li>
                             <li><a href="{{ route('siswa.index') }}">Data Siswa</a></li>
-                            <li><a href="{{ route('tahun-ajaran.index') }}">Data Tahun Ajaran</a></li>
-                            <li><a href="{{ route('kewajiban.index') }}">Data Kewajiban</a></li>
                             @endif
                             @endrole
                         </ul>
@@ -212,12 +213,7 @@
                             <span class="nav-text">Keuangan</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{ route('spp.index') }}">Data Spp</a></li>
-                            <li><a href="my-wallet.html">My Wallet</a></li>
-                            <li><a href="invoices.html">Invoices</a></li>
-                            <li><a href="cards-center.html">Cards Center</a></li>
-                            <li><a href="transactions.html">Transactions</a></li>
-                            <li><a href="transactions-details.html">Transactions Details</a></li>
+                            <li><a href="{{ route('spp.index') }}">Pembayaran Spp</a></li>
                         </ul>
                     </li>
                     @role('Administrator')

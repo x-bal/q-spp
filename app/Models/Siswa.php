@@ -27,6 +27,6 @@ class Siswa extends Model
 
     public function spp()
     {
-        return $this->belongsToMany(Spp::class)->withPivot('tanggal_bayar', 'status', 'nominal');
+        return $this->belongsToMany(Spp::class)->withPivot('tanggal_bayar', 'status', 'nominal')->orderByPivot('spp_id');
     }
 }

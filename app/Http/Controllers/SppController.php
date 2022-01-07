@@ -83,8 +83,9 @@ class SppController extends Controller
 
         try {
             DB::beginTransaction();
-            // $spp->siswa()->detach($request->siswa);
-            $spp->siswa()->syncWithPivotValues($request->siswa, ['nominal' => $request->nominal, 'tanggal_bayar' => $request->tanggal_bayar, 'status' => $request->status]);
+            $siswa = Siswa::findOrFail($request->siswa);
+            $siswa->spp()->detach($spp->id);
+            $siswa->spp()->attach($spp->id, ['nominal' => $request->nominal, 'tanggal_bayar' => $request->tanggal_bayar, 'status' => $request->status]);
             DB::commit();
 
             return redirect('spp?siswa=' . $request->siswa)->with('success', 'Pembayaran Spp berhasil dilakukan');
