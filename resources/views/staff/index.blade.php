@@ -10,7 +10,7 @@
             </div>
 
             <div class="card-body">
-                @role('Admin Yayasan')
+                @role('Admin Yayasan|Administrator')
                 <form action="" method="get">
                     <div class="row">
                         <div class="col-md-4">

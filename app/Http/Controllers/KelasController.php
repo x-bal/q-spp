@@ -8,18 +8,30 @@ use App\Models\Kewajiban;
 use App\Models\Ruang;
 use App\Models\Sekolah;
 use App\Models\TahunAjaran;
+use App\Models\Yayasan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class KelasController extends Controller
 {
+    public function getId()
+    {
+        if (auth()->user()->hasRole('Administrator')) {
+            return Yayasan::where('is_use', 1)->first()->id;
+        }
+
+        if (auth()->user()->hasRole('Admin Yayasan')) {
+            return auth()->user()->yayasan->id;
+        }
+    }
+
     public function index()
     {
         $kelas = [];
         $sekolah = [];
 
-        if (auth()->user()->hasRole('Admin Yayasan')) {
-            $sekolah = Sekolah::where('yayasan_id', auth()->user()->yayasan->id)->get();
+        if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
+            $sekolah = Sekolah::where('yayasan_id', $this->getId())->get();
             if (request('sekolah')) {
                 $kelas = Kelas::where('sekolah_id', request('sekolah'))->get();
             }
@@ -35,16 +47,33 @@ class KelasController extends Controller
     public function create()
     {
         $kela = new Kelas();
-        $jurusan = Jurusan::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
-        $ruang = Ruang::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
-        $tahun = TahunAjaran::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
+        $jurusan = [];
+        $ruang = [];
+        $tahun = [];
+        $sekolah = [];
 
-        return view('kelas.create', compact('kela', 'jurusan', 'ruang', 'tahun'));
+        if (auth()->user()->hasRole('Admin Sekolah')) {
+            $jurusan = Jurusan::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
+            $ruang = Ruang::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
+            $tahun = TahunAjaran::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
+        }
+
+        if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
+            $sekolah = Sekolah::where('yayasan_id', $this->getId())->get();
+            if (request('sekolah')) {
+                $jurusan = Jurusan::where('sekolah_id', request('sekolah'))->get();
+                $ruang = Ruang::where('sekolah_id', request('sekolah'))->get();
+                $tahun = TahunAjaran::where('sekolah_id', request('sekolah'))->get();
+            }
+        }
+
+        return view('kelas.create', compact('kela', 'jurusan', 'ruang', 'tahun', 'sekolah'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
+            'sekolah' => auth()->user()->hasRole('Admin Sekolah') ? '' : 'required',
             'nama' => 'required',
             'jurusan' => 'required',
             'ruangan' => 'required',
@@ -54,7 +83,7 @@ class KelasController extends Controller
         try {
             DB::beginTransaction();
             Kelas::create([
-                'sekolah_id' => auth()->user()->staff->sekolah_id,
+                'sekolah_id' => auth()->user()->staff->sekolah_id ?? $request->sekolah,
                 'jurusan_id' => $request->jurusan,
                 'tahun_ajaran_id' => $request->tahun,
                 'ruang_id' => $request->ruangan,

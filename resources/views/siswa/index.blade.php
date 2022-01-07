@@ -11,7 +11,7 @@
 
             <div class="card-body">
                 <div class="table-responsive">
-                    @role('Admin Yayasan')
+                    @role('Admin Yayasan|Administrator')
                     <form action="" method="get">
                         <div class="row">
                             <div class="col-md-4">

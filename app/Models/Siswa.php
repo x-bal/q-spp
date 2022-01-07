@@ -24,4 +24,9 @@ class Siswa extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function spp()
+    {
+        return $this->belongsToMany(Spp::class)->withPivot('tanggal_bayar', 'status', 'nominal');
+    }
 }

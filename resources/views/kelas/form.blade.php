@@ -1,4 +1,7 @@
 <div class="row">
+    @role('Administrator|Admin Yayasan')
+    <input type="hidden" name="sekolah" value="{{ request('sekolah') }}">
+    @endrole
     <div class="col-md-6">
         <div class="form-group">
             <label for="nama">Nama</label>

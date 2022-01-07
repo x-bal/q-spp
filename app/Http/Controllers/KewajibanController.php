@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kewajiban;
 use App\Models\Sekolah;
 use App\Models\TahunAjaran;
+use App\Models\Yayasan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +17,10 @@ class KewajibanController extends Controller
             return auth()->user()->yayasan->id;
         }
 
+        if (auth()->user()->hasRole('Administrator')) {
+            return Yayasan::where('is_use', 1)->first()->id;
+        }
+
         if (auth()->user()->hasRole('Admin Sekolah')) {
             return auth()->user()->staff->sekolah_id;
         }
@@ -24,8 +29,9 @@ class KewajibanController extends Controller
     public function index()
     {
         $sekolah = [];
+        $kewajiban = [];
 
-        if (auth()->user()->hasRole('Admin Yayasan')) {
+        if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
             $sekolah = Sekolah::where('yayasan_id', $this->getSekolah())->get();
             if (request('sekolah')) {
                 $kewajiban = Kewajiban::where('sekolah_id', request('sekolah'))->get();

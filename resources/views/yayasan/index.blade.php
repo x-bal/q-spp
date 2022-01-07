@@ -1,16 +1,16 @@
-@extends('layouts.master', ['title' => 'Data Tahun Ajaran'])
+@extends('layouts.master', ['title' => 'Data Yayasan'])
 
 @section('content')
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h4 class="card-title">Data Tahun Ajaran</h4>
-                <a href="{{ route('tahun-ajaran.create') }}" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add tahun</a>
+                <h4 class="card-title">Data Yayasan</h4>
+                <a href="{{ route('yayasan.create') }}" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add Yayasan</a>
             </div>
 
             <div class="card-body">
-                @role('Admin Yayasan|Administrator')
+                @role('Admin Yayasan')
                 <form action="" method="get">
                     <div class="row">
                         <div class="col-md-4">
@@ -35,20 +35,25 @@
                         <thead>
                             <tr>
                                 <th class="width80">#</th>
-                                <th>Tahun Ajaran</th>
+                                <!-- <th>Logo</th> -->
+                                <th>Nama</th>
+                                <th>Telp</th>
+                                <th>Alamat</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($tahun as $thn)
+                            @foreach($yayasan as $ysn)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $thn->tahun_ajaran }}</td>
+                                <td>{{ $ysn->nama }}</td>
+                                <td>{{ $ysn->telp }}</td>
+                                <td>{{ $ysn->alamat }}</td>
                                 <td>
                                     <div class="d-flex">
-                                        <a href="{{ route('tahun-ajaran.show', $thn->id) }}" class="btn btn-info shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
-                                        <a href="{{ route('tahun-ajaran.edit', $thn->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
-                                        <form action="{{ route('tahun-ajaran.destroy', $thn->id) }}" method="post" class="form-delete">
+                                        <a href="{{ route('yayasan.use', $ysn->id) }}?use={{ $ysn->is_use == 0 ? 1 : 0 }}" class="btn btn-{{ $ysn->is_use == 1 ? 'danger' : 'info' }} shadow btn-xs sharp mr-1"><i class="fa fa-{{ $ysn->is_use == 1 ? 'times' : 'check' }}"></i></a>
+                                        <a href="{{ route('yayasan.edit', $ysn->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
+                                        <form action="{{ route('yayasan.destroy', $ysn->id) }}" method="post" class="form-delete">
                                             @method('DELETE')
                                             @csrf
                                             <button type="submit" class="btn btn-danger shadow btn-xs sharp btn-delete"><i class="fa fa-trash"></i></button>

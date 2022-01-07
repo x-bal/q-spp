@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Sekolah;
 use App\Models\Staff;
 use App\Models\User;
+use App\Models\Yayasan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,13 +13,24 @@ use Illuminate\Support\Facades\Hash;
 
 class StaffController extends Controller
 {
+    public function getId()
+    {
+        if (auth()->user()->hasRole('Administrator')) {
+            return Yayasan::where('is_use', 1)->first()->id;
+        }
+
+        if (auth()->user()->hasRole('Admin Yayasan')) {
+            return auth()->user()->yayasan->id;
+        }
+    }
+
     public function index()
     {
         $staffs = [];
         $sekolah = [];
 
-        if (auth()->user()->hasRole('Admin Yayasan')) {
-            $sekolah = Sekolah::where('yayasan_id', auth()->user()->yayasan->id)->get();
+        if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
+            $sekolah = Sekolah::where('yayasan_id', $this->getId())->get();
             if (request('sekolah')) {
                 $staffs = Staff::where('sekolah_id', request('sekolah'))->get();
             }
@@ -36,8 +48,8 @@ class StaffController extends Controller
         $staff = new Staff();
         $sekolah = [];
 
-        if (auth()->user()->hasRole('Admin Yayasan')) {
-            $sekolah = Sekolah::where('yayasan_id', auth()->user()->yayasan->id)->get();
+        if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
+            $sekolah = Sekolah::where('yayasan_id', $this->getId())->get();
         }
 
         return view('staff.create', compact('staff', 'sekolah'));
@@ -83,7 +95,7 @@ class StaffController extends Controller
             ]);
 
             $user->staff()->create([
-                'sekolah_id' => auth()->user()->hasRole('Admin Yayasan') ? $request->sekolah : auth()->user()->staff->sekolah_id,
+                'sekolah_id' => auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator') ? $request->sekolah : auth()->user()->staff->sekolah_id,
                 'jabatan' => $request->jabatan,
                 'tanggal_lahir' => $request->tanggal_lahir,
             ]);
@@ -105,8 +117,8 @@ class StaffController extends Controller
     {
         $sekolah = [];
 
-        if (auth()->user()->hasRole('Admin Yayasan')) {
-            $sekolah = Sekolah::where('yayasan_id', auth()->user()->yayasan->id)->get();
+        if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
+            $sekolah = Sekolah::where('yayasan_id', $this->getId())->get();
         }
 
         return view('staff.edit', compact('staff', 'sekolah'));
@@ -114,7 +126,7 @@ class StaffController extends Controller
 
     public function update(Request $request, Staff $staff)
     {
-        if (auth()->user()->hasRole('Admin Yayasan')) {
+        if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
             $request->validate([
                 'nama' => 'required',
                 'username' => 'required|unique:users,username,' . $staff->user->id,
@@ -152,7 +164,7 @@ class StaffController extends Controller
             ]);
 
             $staff->update([
-                'sekolah_id' => auth()->user()->hasRole('Admin Yayasan') ? $request->sekolah : auth()->user()->staff->sekolah_id,
+                'sekolah_id' => auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator') ? $request->sekolah : auth()->user()->staff->sekolah_id,
                 'jabatan' => $request->jabatan,
                 'tanggal_lahir' => $request->tanggal_lahir,
             ]);

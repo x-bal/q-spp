@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sekolah;
+use App\Models\Yayasan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -10,9 +11,20 @@ use Illuminate\Support\Str;
 
 class SekolahController extends Controller
 {
+    public function getId()
+    {
+        if (auth()->user()->hasRole('Administrator')) {
+            return Yayasan::where('is_use', 1)->first()->id;
+        }
+
+        if (auth()->user()->hasRole('Admin Yayasan')) {
+            return auth()->user()->yayasan->id;
+        }
+    }
+
     public function index()
     {
-        $sekolah = Sekolah::where('yayasan_id', auth()->user()->yayasan->id)->get();
+        $sekolah = Sekolah::where('yayasan_id', $this->getId())->get();
 
         return view('sekolah.index', compact('sekolah'));
     }
@@ -45,7 +57,7 @@ class SekolahController extends Controller
             DB::beginTransaction();
 
             Sekolah::create([
-                'yayasan_id'  => auth()->user()->yayasan->id,
+                'yayasan_id'  => $this->getId(),
                 'nama' => $request->nama,
                 'telp' => $request->telp,
                 'alamat' => $request->alamat,
@@ -92,7 +104,7 @@ class SekolahController extends Controller
             DB::beginTransaction();
 
             $sekolah->update([
-                'yayasan_id'  => auth()->user()->yayasan->id,
+                'yayasan_id'  => $this->getId(),
                 'nama' => $request->nama,
                 'telp' => $request->telp,
                 'alamat' => $request->alamat,

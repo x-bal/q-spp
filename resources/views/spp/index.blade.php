@@ -1,18 +1,17 @@
-@extends('layouts.master', ['title' => 'Data Tahun Ajaran'])
+@extends('layouts.master', ['title' => 'Data SPP'])
 
 @section('content')
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h4 class="card-title">Data Tahun Ajaran</h4>
-                <a href="{{ route('tahun-ajaran.create') }}" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> Add tahun</a>
+                <h4 class="card-title">Data SPP</h4>
             </div>
 
             <div class="card-body">
-                @role('Admin Yayasan|Administrator')
                 <form action="" method="get">
                     <div class="row">
+                        @role('Admin Yayasan|Administrator')
                         <div class="col-md-4">
                             <div class="form-group">
                                 <select name="sekolah" id="sekolah" class="form-control">
@@ -23,41 +22,73 @@
                                 </select>
                             </div>
                         </div>
+                        @endrole
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <select name="siswa" id="single-select">
+                                    <option disabled selected>-- Pilih Siswa --</option>
+                                    @foreach($siswa as $sw)
+                                    <option value="{{ $sw->id }}" {{ request('siswa') == $sw->id ? 'selected' : '' }}>{{ $sw->nisn }} - {{ $sw->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </div>
                 </form>
-                @endrole
 
                 <div class="table-responsive">
                     <table class="table table-responsive-md" id="example">
                         <thead>
                             <tr>
                                 <th class="width80">#</th>
-                                <th>Tahun Ajaran</th>
+                                <th>Bulan</th>
+                                <th>Tahun</th>
+                                <th>Nominal</th>
+                                <th>Tanggal Bayar</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($tahun as $thn)
+                            @if(request('siswa'))
+                            @foreach($spp->spp as $sp)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $thn->tahun_ajaran }}</td>
+                                <td>
+                                    {{ $sp->bulan }}
+                                </td>
+                                <td>
+                                    {{ $sp->tahun }}
+                                </td>
+                                <td>
+                                    Rp. {{ $sp->pivot->nominal }}
+                                </td>
+                                <td>
+                                    {{ $sp->pivot->status == 'Lunas' ? Carbon\Carbon::parse($sp->pivot->tanggal_bayar)->format('d/m/Y') : '-' }}
+                                </td>
+                                <td>
+                                    <span class="badge badge-{{ $sp->pivot->status == 'Lunas' ? 'success' : 'danger' }}">{{ $sp->pivot->status }}</span>
+                                </td>
                                 <td>
                                     <div class="d-flex">
-                                        <a href="{{ route('tahun-ajaran.show', $thn->id) }}" class="btn btn-info shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
-                                        <a href="{{ route('tahun-ajaran.edit', $thn->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
-                                        <form action="{{ route('tahun-ajaran.destroy', $thn->id) }}" method="post" class="form-delete">
+                                        <a href="{{ route('spp.edit', $sp->id) }}?siswa={{ $spp->id }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
+                                        <!-- <form action="{{ route('spp.destroy', $sp->id) }}" method="post" class="form-delete">
                                             @method('DELETE')
                                             @csrf
                                             <button type="submit" class="btn btn-danger shadow btn-xs sharp btn-delete"><i class="fa fa-trash"></i></button>
-                                        </form>
+                                        </form> -->
                                     </div>
                                 </td>
                             </tr>
                             @endforeach
+                            @endif
                         </tbody>
+
                     </table>
                 </div>
             </div>

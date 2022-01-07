@@ -178,9 +178,12 @@
                             <span class="nav-text">Data Master</span>
                         </a>
                         <ul aria-expanded="false">
-                            @role('Admin Yayasan')
-                            <li><a href="{{ route('sekolah.index') }}">Data Sekolah</a></li>
+                            @role('Administrator')
+                            <li><a href="{{ route('yayasan.index') }}">Data Yayasan</a></li>
                             @endrole
+
+                            @role('Admin Sekolah')
+                            <li><a href="{{ route('sekolah.index') }}">Data Sekolah</a></li>
                             <li><a href="{{ route('jurusan.index') }}">Data Jurusan</a></li>
                             <li><a href="{{ route('staff.index') }}">Data Staff</a></li>
                             <li><a href="{{ route('ruang.index') }}">Data Ruangan</a></li>
@@ -188,6 +191,20 @@
                             <li><a href="{{ route('siswa.index') }}">Data Siswa</a></li>
                             <li><a href="{{ route('tahun-ajaran.index') }}">Data Tahun Ajaran</a></li>
                             <li><a href="{{ route('kewajiban.index') }}">Data Kewajiban</a></li>
+                            @endrole
+
+                            @role('Administrator')
+                            @if(App\Models\Yayasan::where('is_use', 1)->count() > 0)
+                            <li><a href="{{ route('sekolah.index') }}">Data Sekolah</a></li>
+                            <li><a href="{{ route('jurusan.index') }}">Data Jurusan</a></li>
+                            <li><a href="{{ route('staff.index') }}">Data Staff</a></li>
+                            <li><a href="{{ route('ruang.index') }}">Data Ruangan</a></li>
+                            <li><a href="{{ route('kelas.index') }}">Data Kelas</a></li>
+                            <li><a href="{{ route('siswa.index') }}">Data Siswa</a></li>
+                            <li><a href="{{ route('tahun-ajaran.index') }}">Data Tahun Ajaran</a></li>
+                            <li><a href="{{ route('kewajiban.index') }}">Data Kewajiban</a></li>
+                            @endif
+                            @endrole
                         </ul>
                     </li>
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
@@ -195,7 +212,7 @@
                             <span class="nav-text">Keuangan</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="/dashboard">Dashboard</a></li>
+                            <li><a href="{{ route('spp.index') }}">Data Spp</a></li>
                             <li><a href="my-wallet.html">My Wallet</a></li>
                             <li><a href="invoices.html">Invoices</a></li>
                             <li><a href="cards-center.html">Cards Center</a></li>

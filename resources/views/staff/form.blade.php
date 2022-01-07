@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    @role('Admin Yayasan')
+    @role('Admin Yayasan|Administrator')
     <div class="col-md-6">
         <div class="form-group">
             <label for="sekolah">Sekolah</label>

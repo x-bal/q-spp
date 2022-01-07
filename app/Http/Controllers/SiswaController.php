@@ -6,6 +6,8 @@ use App\Imports\SiswaImport;
 use App\Models\Kelas;
 use App\Models\Sekolah;
 use App\Models\Siswa;
+use App\Models\TahunAjaran;
+use App\Models\Yayasan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -13,13 +15,24 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class SiswaController extends Controller
 {
+    public function getId()
+    {
+        if (auth()->user()->hasRole('Administrator')) {
+            return Yayasan::where('is_use', 1)->first()->id;
+        }
+
+        if (auth()->user()->hasRole('Admin Yayasan')) {
+            return auth()->user()->yayasan->id;
+        }
+    }
+
     public function index()
     {
         $siswa = [];
         $sekolah = [];
 
-        if (auth()->user()->hasRole('Admin Yayasan')) {
-            $sekolah = Sekolah::where('yayasan_id', auth()->user()->yayasan->id)->get();
+        if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
+            $sekolah = Sekolah::where('yayasan_id', $this->getId())->get();
             if (request('sekolah')) {
                 $siswa = Siswa::where('sekolah_id', request('sekolah'))->get();
             }
@@ -117,8 +130,10 @@ class SiswaController extends Controller
         try {
             $file = $request->file('file');
             $fileUrl =  $file->storeAs('siswa/import', $file->getClientOriginalName());
+            $kelas = Kelas::find($request->kelas);
+            $tahunAjaran = TahunAjaran::find($kelas->tahun_ajaran_id);
 
-            Excel::import(new SiswaImport(auth()->user()->staff->sekolah_id, $request->kelas), public_path('storage/' . $fileUrl));
+            Excel::import(new SiswaImport(auth()->user()->staff->sekolah_id, $request->kelas, $tahunAjaran->id), public_path('storage/' . $fileUrl));
 
             Storage::delete($fileUrl);
 

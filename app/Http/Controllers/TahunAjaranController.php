@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Sekolah;
 use App\Models\TahunAjaran;
+use App\Models\Yayasan;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,6 +17,10 @@ class TahunAjaranController extends Controller
             return auth()->user()->yayasan->id;
         }
 
+        if (auth()->user()->hasRole('Administrator')) {
+            return Yayasan::where('is_use', 1)->first()->id;
+        }
+
         if (auth()->user()->hasRole('Admin Sekolah')) {
             return auth()->user()->staff->sekolah_id;
         }
@@ -23,8 +29,9 @@ class TahunAjaranController extends Controller
     public function index()
     {
         $sekolah = [];
+        $tahun = [];
 
-        if (auth()->user()->hasRole('Admin Yayasan')) {
+        if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
             $sekolah = Sekolah::where('yayasan_id', $this->getSekolah())->get();
             if (request('sekolah')) {
                 $tahun = TahunAjaran::where('sekolah_id', request('sekolah'))->get();
@@ -59,10 +66,23 @@ class TahunAjaranController extends Controller
 
         try {
             DB::beginTransaction();
-            TahunAjaran::create([
+            $tahunAjaran = TahunAjaran::create([
                 'tahun_ajaran' => $request->tahun,
                 'sekolah_id' => $this->getSekolah()
             ]);
+
+            $tahun = explode('/', $request->tahun);
+
+            $result = CarbonPeriod::create($tahun[0] . '-07-01', '1 month', $tahun[1] . '-06-01');
+
+            foreach ($result as $dt) {
+                $tahunAjaran->spp()->create([
+                    'sekolah_id' => $this->getSekolah(),
+                    'bulan' => $dt->format('F'),
+                    'tahun' => $dt->format('Y'),
+                ]);
+            }
+
             DB::commit();
 
             return redirect()->route('tahun-ajaran.index')->with('success', 'Tahun Ajaran berhasil ditambahkan');
@@ -89,9 +109,22 @@ class TahunAjaranController extends Controller
 
         try {
             DB::beginTransaction();
+
             $tahunAjaran->update([
                 'tahun_ajaran' => $request->tahun,
             ]);
+
+            $tahun = explode('/', $tahunAjaran->tahun_ajaran);
+            $result = CarbonPeriod::create($tahun[0] . '-07-01', '1 month', $tahun[1] . '-06-01');
+
+            foreach ($result as $dt => $key) {
+                $tahunAjaran->spp[$dt]->update([
+                    'sekolah_id' => $this->getSekolah(),
+                    'bulan' => $key->format('F'),
+                    'tahun' => $key->format('Y'),
+                ]);
+            }
+
             DB::commit();
 
             return redirect()->route('tahun-ajaran.index')->with('success', 'Tahun Ajaran berhasil diupdate');

@@ -9,8 +9,10 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RuangController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\SppController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TahunAjaranController;
+use App\Http\Controllers\YayasanController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,6 +45,8 @@ Route::middleware(['auth', 'active'])->group(function () {
     });
 
     // Route Data Master
+    Route::resource('yayasan', YayasanController::class);
+    Route::get('yayasan/{yayasan:id}/use', [YayasanController::class, 'use'])->name('yayasan.use');
     Route::resource('sekolah', SekolahController::class);
     Route::resource('jurusan', JurusanController::class);
     Route::resource('staff', StaffController::class);
@@ -55,4 +59,5 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::post('siswa/import', [SiswaController::class, 'import'])->name('siswa.import');
     Route::resource('tahun-ajaran', TahunAjaranController::class);
     Route::resource('kewajiban', KewajibanController::class);
+    Route::resource('spp', SppController::class);
 });
