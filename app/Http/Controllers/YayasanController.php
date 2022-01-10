@@ -99,7 +99,7 @@ class YayasanController extends Controller
                 'name' => $request->nama_pemilik,
                 'email' => $request->email,
                 'username' => $request->username,
-                'password' => bcrypt($request->password),
+                'password' => $request->password ? bcrypt($request->password) : $yayasan->admin->password,
             ]);
 
             $yayasan->update([

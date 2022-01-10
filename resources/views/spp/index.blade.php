@@ -42,6 +42,7 @@
 </div>
 
 @if(request('siswa'))
+
 <div class="row">
     <div class="col-xl-12">
         <div class="card stacked-2">

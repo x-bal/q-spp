@@ -184,7 +184,7 @@
                             @role('Admin Yayasan')
                             <li><a href="{{ route('sekolah.index') }}">Data Sekolah</a></li>
                             @endrole
-                            @role('Admin Sekolah')
+                            @role('Admin Sekolah|Admin Yayasan')
                             <li><a href="{{ route('jurusan.index') }}">Data Jurusan</a></li>
                             <li><a href="{{ route('staff.index') }}">Data Staff</a></li>
                             <li><a href="{{ route('tahun-ajaran.index') }}">Data Tahun Ajaran</a></li>

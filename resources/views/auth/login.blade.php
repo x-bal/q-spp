@@ -29,7 +29,11 @@
                                         @csrf
                                         <div class="form-group">
                                             <label class="mb-1 text-white"><strong>Username Or Email</strong></label>
-                                            <input type="text" class="form-control" name="username">
+                                            <input type="text" class="form-control" name="username" value="{{ old('username') }}">
+
+                                            @error('username')
+                                            <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <div class="form-group">
                                             <label class="mb-1 text-white"><strong>Password</strong></label>

@@ -32,10 +32,11 @@ class SppController extends Controller
             $sekolah = Sekolah::where('yayasan_id', $this->getId())->get();
             if (request('sekolah')) {
                 $spp = Spp::where('sekolah_id', request('sekolah'))->get();
+                $siswa = Siswa::where('sekolah_id', request('sekolah'))->get();
             }
 
             if (request('siswa')) {
-                $siswa = Siswa::where('sekolah_id', request('sekolah'))->get();
+                $spp = Siswa::findOrFail(request('siswa'));
             }
         }
 

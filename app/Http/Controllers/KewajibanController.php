@@ -12,18 +12,14 @@ use Illuminate\Support\Facades\DB;
 
 class KewajibanController extends Controller
 {
-    public function getSekolah()
+    public function getId()
     {
-        if (auth()->user()->hasRole('Admin Yayasan')) {
-            return auth()->user()->yayasan->id;
-        }
-
         if (auth()->user()->hasRole('Administrator')) {
             return Yayasan::where('is_use', 1)->first()->id;
         }
 
-        if (auth()->user()->hasRole('Admin Sekolah')) {
-            return auth()->user()->staff->sekolah_id;
+        if (auth()->user()->hasRole('Admin Yayasan')) {
+            return auth()->user()->yayasan->id;
         }
     }
 
@@ -33,14 +29,14 @@ class KewajibanController extends Controller
         $kewajiban = [];
 
         if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
-            $sekolah = Sekolah::where('yayasan_id', $this->getSekolah())->get();
+            $sekolah = Sekolah::where('yayasan_id', $this->getId())->get();
             if (request('sekolah')) {
                 $kewajiban = Kewajiban::where('sekolah_id', request('sekolah'))->get();
             }
         }
 
         if (auth()->user()->hasRole('Admin Sekolah')) {
-            $kewajiban = Kewajiban::where('sekolah_id', $this->getSekolah())->get();
+            $kewajiban = Kewajiban::where('sekolah_id', $this->getId())->get();
         }
 
         return view('kewajiban.index', compact('kewajiban', 'sekolah'));
@@ -122,15 +118,17 @@ class KewajibanController extends Controller
     {
         $sekolah = [];
         $siswa = [];
+        $siswas = [];
 
         if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
             $sekolah = Sekolah::where('yayasan_id', $this->getId())->get();
             if (request('sekolah')) {
-                $sekolah = Sekolah::where('sekolah_id', request('sekolah'))->get();
+                $sekolah = Sekolah::where('yayasan_id', request('sekolah'))->get();
+                $siswas = Siswa::where('sekolah_id', request('sekolah'))->get();
             }
 
             if (request('siswa')) {
-                $siswas = Siswa::where('sekolah_id', request('sekolah'))->get();
+                $siswa = Siswa::findOrFail(request('siswa'));
             }
         }
 
