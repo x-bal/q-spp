@@ -24,13 +24,13 @@
 
     <div class="col-md-4">
         <div class="form-group">
-            <label for="nominal">Nominal</label>
+            <label for="status">Status</label>
             <select name="status" id="status" class="form-control">
                 <option {{ $spp->status == 'Belum Lunas' ? 'selected' : '' }} value="Belum Lunas">Belum Lunas</option>
                 <option {{ $spp->status == 'Lunas' ? 'selected' : '' }} value="Lunas">Lunas</option>
             </select>
 
-            @error('nominal')
+            @error('status')
             <small class="text-danger">{{ $message }}</small>
             @enderror
         </div>

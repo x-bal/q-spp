@@ -61,19 +61,23 @@ class TahunAjaranController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'tahun' => 'required'
+            'tahun' => 'required',
+            'mulai' => 'required',
+            'sampai' => 'required',
         ]);
 
         try {
             DB::beginTransaction();
             $tahunAjaran = TahunAjaran::create([
                 'tahun_ajaran' => $request->tahun,
+                'mulai' => $request->mulai,
+                'sampai' => $request->sampai,
                 'sekolah_id' => $this->getSekolah()
             ]);
 
             $tahun = explode('/', $request->tahun);
 
-            $result = CarbonPeriod::create($tahun[0] . '-07-01', '1 month', $tahun[1] . '-06-01');
+            $result = CarbonPeriod::create($tahun[0] . '-' . $request->mulai . '-01', '1 month', $tahun[1] . '-' . $request->sampai . '-01');
 
             foreach ($result as $dt) {
                 $tahunAjaran->spp()->create([
@@ -104,7 +108,9 @@ class TahunAjaranController extends Controller
     public function update(Request $request, TahunAjaran $tahunAjaran)
     {
         $request->validate([
-            'tahun' => 'required'
+            'tahun' => 'required',
+            'mulai' => 'required',
+            'sampai' => 'required',
         ]);
 
         try {
@@ -112,10 +118,13 @@ class TahunAjaranController extends Controller
 
             $tahunAjaran->update([
                 'tahun_ajaran' => $request->tahun,
+                'mulai' => $request->mulai,
+                'sampai' => $request->sampai,
             ]);
 
-            $tahun = explode('/', $tahunAjaran->tahun_ajaran);
-            $result = CarbonPeriod::create($tahun[0] . '-07-01', '1 month', $tahun[1] . '-06-01');
+            $tahun = explode('/', $request->tahun);
+
+            $result = CarbonPeriod::create($tahun[0] . '-' . $request->mulai . '-01', '1 month', $tahun[1] . '-' . $request->sampai . '-01');
 
             foreach ($result as $dt => $key) {
                 $tahunAjaran->spp[$dt]->update([

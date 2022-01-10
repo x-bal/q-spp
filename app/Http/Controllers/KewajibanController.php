@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kewajiban;
 use App\Models\Sekolah;
+use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use App\Models\Yayasan;
 use Illuminate\Http\Request;
@@ -112,6 +113,60 @@ class KewajibanController extends Controller
             DB::commit();
 
             return redirect()->route('kewajiban.index')->with('success', 'Kewajiban berhasil diupdate');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function pembayaran()
+    {
+        $sekolah = [];
+        $siswa = [];
+
+        if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
+            $sekolah = Sekolah::where('yayasan_id', $this->getId())->get();
+            if (request('sekolah')) {
+                $sekolah = Sekolah::where('sekolah_id', request('sekolah'))->get();
+            }
+
+            if (request('siswa')) {
+                $siswas = Siswa::where('sekolah_id', request('sekolah'))->get();
+            }
+        }
+
+        if (auth()->user()->hasRole('Admin Sekolah')) {
+            $siswas = Siswa::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
+            if (request('siswa')) {
+                $siswa = Siswa::findOrFail(request('siswa'));
+            }
+        }
+
+        return view('kewajiban.pembayaran', compact('siswa', 'sekolah', 'siswas'));
+    }
+
+    public function bayar(Kewajiban $kewajiban)
+    {
+        $kewajiban = DB::table('kewajiban_siswa')->where('siswa_id', request('siswa'))->where('kewajiban_id', $kewajiban->id)->first();
+
+        return view('kewajiban.bayar', compact('kewajiban'));
+    }
+
+    public function bayarKewajiban(Request $request)
+    {
+        $request->validate([
+            'nominal' => 'required',
+            'tanggal_bayar' => 'required',
+            'status' => 'required',
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $kewajiban = Kewajiban::find($request->kewajiban);
+            $kewajiban->siswa()->detach($request->siswa);
+            $kewajiban->siswa()->attach($request->siswa, ['tgl_bayar' => $request->tanggal_bayar, 'nominal' => $request->nominal, 'status' => $request->status]);
+            DB::commit();
+
+            return redirect('/kewajiban/pembayaran?siswa=' . $request->siswa)->with('success', 'Pembayaran berhasil');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

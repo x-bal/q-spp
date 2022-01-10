@@ -22,6 +22,6 @@ class Kewajiban extends Model
 
     public function siswa()
     {
-        return $this->hasMany(Siswa::class);
+        return $this->belongsToMany(Siswa::class)->withPivot('tgl_bayar', 'status');
     }
 }

@@ -36,6 +36,8 @@
                             <tr>
                                 <th class="width80">#</th>
                                 <th>Tahun Ajaran</th>
+                                <th>Mulai</th>
+                                <th>Sampai</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -44,6 +46,8 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $thn->tahun_ajaran }}</td>
+                                <td>{{ Carbon\Carbon::create()->day(1)->month($thn->mulai)->format('F') }}</td>
+                                <td>{{ Carbon\Carbon::create()->day(1)->month($thn->sampai)->format('F') }}</td>
                                 <td>
                                     <div class="d-flex">
                                         <a href="{{ route('tahun-ajaran.show', $thn->id) }}" class="btn btn-info shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>

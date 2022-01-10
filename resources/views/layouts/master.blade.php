@@ -214,6 +214,8 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ route('spp.index') }}">Pembayaran Spp</a></li>
+                            <li><a href="{{ route('kewajiban.pembayaran') }}">Pembayaran Kewajiban</a></li>
+                            <!-- <li><a href="{{ route('spp.tagihan') }}">Tagihan Spp</a></li> -->
                         </ul>
                     </li>
                     @role('Administrator')

@@ -17,7 +17,7 @@ class Siswa extends Model
 
     public function kewajiban()
     {
-        return $this->belongsToMany(Kewajiban::class);
+        return $this->belongsToMany(Kewajiban::class)->withPivot('tgl_bayar', 'status', 'nominal')->orderByPivot('kewajiban_id');
     }
 
     public function user()

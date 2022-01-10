@@ -24,7 +24,6 @@ class SppController extends Controller
 
     public function index()
     {
-        $jurusan = [];
         $sekolah = [];
         $siswa = [];
         $spp = [];
@@ -94,12 +93,33 @@ class SppController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Spp  $spp
-     * @return \Illuminate\Http\Response
-     */
+    public function tagihan()
+    {
+        $sekolah = [];
+        $siswa = [];
+        $spp = [];
+
+        if (auth()->user()->hasAnyRole('Admin Yayasan', 'Administrator')) {
+            $sekolah = Sekolah::where('yayasan_id', $this->getId())->get();
+            if (request('sekolah')) {
+                $spp = Spp::where('sekolah_id', request('sekolah'))->get();
+            }
+
+            if (request('siswa')) {
+                $siswa = Siswa::where('sekolah_id', request('sekolah'))->get();
+            }
+        }
+
+        if (auth()->user()->hasRole('Admin Sekolah')) {
+            $siswa = Siswa::where('sekolah_id', auth()->user()->staff->sekolah_id)->get();
+            if (request('siswa')) {
+                $spp = Siswa::findOrFail(request('siswa'));
+            }
+        }
+
+        return view('spp.tagihan', compact('spp', 'sekolah', 'siswa'));
+    }
+
     public function destroy(Spp $spp)
     {
         //

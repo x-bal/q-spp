@@ -17,6 +17,8 @@ class CreateTahunAjaransTable extends Migration
             $table->id();
             $table->foreignId('sekolah_id');
             $table->string('tahun_ajaran');
+            $table->integer('mulai');
+            $table->integer('sampai');
             $table->timestamps();
         });
     }

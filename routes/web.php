@@ -58,6 +58,10 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::resource('siswa', SiswaController::class);
     Route::post('siswa/import', [SiswaController::class, 'import'])->name('siswa.import');
     Route::resource('tahun-ajaran', TahunAjaranController::class);
+    Route::get('kewajiban/pembayaran', [KewajibanController::class, 'pembayaran'])->name('kewajiban.pembayaran');
+    Route::get('kewajiban/{kewajiban:id}/bayar', [KewajibanController::class, 'bayar'])->name('kewajiban.bayar');
+    Route::post('kewajiban/bayar', [KewajibanController::class, 'bayarKewajiban'])->name('kewajiban.bayarKewajiban');
     Route::resource('kewajiban', KewajibanController::class);
+    Route::get('/spp/tagihan', [SppController::class, 'tagihan'])->name('spp.tagihan');
     Route::resource('spp', SppController::class);
 });

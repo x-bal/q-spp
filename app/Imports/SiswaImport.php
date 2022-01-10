@@ -27,9 +27,12 @@ class SiswaImport implements ToCollection, WithHeadingRow
             $user = User::create([
                 'name' => $row['nama'],
                 'username' => $row['nisn'],
-                'email' => strtolower(trim($row['nama'], " ")) . '@spp.com',
+                'email' => strtolower(trim($row['nisn'], " ")) . '@spp.com',
                 'password' => bcrypt(Carbon::parse($row['tanggal'])->format('dmY'))
             ]);
+
+            $miliseconds = ($row['tanggal'] - 25569) * 86400 * 1000;
+            $tgl = $miliseconds / 1000;
 
             $siswa = $user->siswa()->create([
                 'sekolah_id' => $this->sekolah_id,
@@ -38,7 +41,7 @@ class SiswaImport implements ToCollection, WithHeadingRow
                 'nama' => $row['nama'],
                 'jk' => $row['jk'],
                 'tempat_lahir' => $row['tempat'],
-                'tanggal_lahir' => Carbon::parse($row['tanggal'])->format('Y-m-d'),
+                'tanggal_lahir' => date('Y-m-d', $tgl),
             ]);
 
             $siswa->spp()->sync($tahunAjaran);
