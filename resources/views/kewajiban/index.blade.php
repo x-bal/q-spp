@@ -47,7 +47,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $wajib->nama }}</td>
-                                <td>{{ $wajib->biaya }}</td>
+                                <td>Rp. {{ number_format($wajib->biaya, 0, ',', '.') }}</td>
                                 <td>{{ $wajib->tahunAjaran->tahun_ajaran }}</td>
                                 <td>{{ Carbon\Carbon::parse($wajib->jatuh_tempo)->format('d/m/Y') }}</td>
                                 <td>
