@@ -16,6 +16,7 @@ class CreateKewajibanSiswaTable extends Migration
         Schema::create('kewajiban_siswa', function (Blueprint $table) {
             $table->foreignId('kewajiban_id');
             $table->foreignId('siswa_id');
+            $table->double('nominal')->nullable();
             $table->date('tgl_bayar')->nullable();
             $table->string('status')->default('Belum Lunas');
         });
